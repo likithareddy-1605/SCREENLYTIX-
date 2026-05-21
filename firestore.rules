@@ -1,0 +1,92 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidResponse(data) {
+      return data.keys().hasAll(['name', 'ageGroup', 'gender', 'occupation', 'dailyUsage', 'mainPurpose', 'usagePurpose', 'socialMediaUsage', 'checkAfterWaking', 'useBeforeSleep', 'feelsAddicted', 'stayWithoutPhone', 'usageWhileEating', 'status', 'createdAt'])
+        && data.keys().size() <= 16 // keys + optional userId
+        && data.name is string && data.name.size() < 150
+        && data.ageGroup is string && data.ageGroup.size() < 100
+        && data.gender is string && data.gender.size() < 50
+        && data.occupation is string && data.occupation.size() < 100
+        && data.dailyUsage is string && data.dailyUsage.size() < 100
+        && data.mainPurpose is string && data.mainPurpose.size() < 200
+        && data.usagePurpose is list
+        && data.socialMediaUsage is string && data.socialMediaUsage.size() < 100
+        && data.checkAfterWaking is string && data.checkAfterWaking.size() < 100
+        && data.useBeforeSleep is string && data.useBeforeSleep.size() < 100
+        && data.feelsAddicted is string && data.feelsAddicted.size() < 100
+        && data.stayWithoutPhone is string && data.stayWithoutPhone.size() < 100
+        && data.usageWhileEating is string && data.usageWhileEating.size() < 100
+        && data.status is string && data.status.size() < 50
+        && data.createdAt == request.time;
+    }
+
+    function isValidUserResponse(data) {
+      return data.keys().hasAll(['name', 'ageGroup', 'gender', 'occupation', 'dailyUsage', 'mainPurpose', 'usagePurpose', 'socialMediaUsage', 'checkAfterWaking', 'useBeforeSleep', 'feelsAddicted', 'stayWithoutPhone', 'usageWhileEating', 'status', 'createdAt'])
+        && data.keys().size() <= 17 // keys + optional userId + optional digitalWellbeingScore
+        && data.name is string && data.name.size() < 150
+        && data.ageGroup is string && data.ageGroup.size() < 100
+        && data.gender is string && data.gender.size() < 50
+        && data.occupation is string && data.occupation.size() < 100
+        && data.dailyUsage is string && data.dailyUsage.size() < 100
+        && data.mainPurpose is string && data.mainPurpose.size() < 200
+        && data.usagePurpose is list
+        && data.socialMediaUsage is string && data.socialMediaUsage.size() < 100
+        && data.checkAfterWaking is string && data.checkAfterWaking.size() < 100
+        && data.useBeforeSleep is string && data.useBeforeSleep.size() < 100
+        && data.feelsAddicted is string && data.feelsAddicted.size() < 100
+        && data.stayWithoutPhone is string && data.stayWithoutPhone.size() < 100
+        && data.usageWhileEating is string && data.usageWhileEating.size() < 100
+        && data.status is string && data.status.size() < 50
+        && data.createdAt == request.time
+        && (!data.keys().contains('digitalWellbeingScore') || (data.digitalWellbeingScore is int && data.digitalWellbeingScore >= 0 && data.digitalWellbeingScore <= 100));
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Responses collection
+    match /responses/{responseId} {
+      // Users can create responses
+      allow create: if isValidResponse(incoming());
+      
+      // Public read for the analytics dashboard in this specific awareness app
+      allow read: if true;
+
+      // Prevent updates and deletes to keep data history intact
+      allow update, delete: if false;
+    }
+
+    // userResponses collection
+    match /userResponses/{userResponseId} {
+      // Users can create responses with addDoc()
+      allow create: if isValidUserResponse(incoming());
+      
+      // Public read for the sheets-style responses table inside Admin page
+      allow read: if true;
+
+      // Prevent updates and deletes to keep data history intact
+      allow update, delete: if false;
+    }
+  }
+}
