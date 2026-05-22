@@ -9,15 +9,15 @@ Smart Mobile Usage Analytics & Digital Wellbeing Platform
 - Admin Analytics Dashboard
 - Screen Time Insights
 - Risk Level Detection
-- Firebase Database Integration
+- Firebase Integration
 - Responsive Mobile UI
 
-## Built With
+## Tech Stack
 - React
 - TypeScript
 - Firebase
 - Tailwind CSS
 - Vercel
 
-## Live App
-Coming Soon 🚀
+## Live Demo
+🚀 https://screenlytix.vercel.app
