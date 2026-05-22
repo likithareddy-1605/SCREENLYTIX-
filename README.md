@@ -1,20 +1,23 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Screenlytix
 
-# Run and deploy your AI Studio app
+Smart Mobile Usage Analytics & Digital Wellbeing Platform
 
-This contains everything you need to run your app locally.
+## Features
+- Mobile Usage Behaviour Analysis
+- Digital Wellbeing Score
+- Personalized Awareness Suggestions
+- Admin Analytics Dashboard
+- Screen Time Insights
+- Risk Level Detection
+- Firebase Database Integration
+- Responsive Mobile UI
 
-View your app in AI Studio: https://ai.studio/apps/9b5d4557-7d21-4e6b-a20f-27da1ceff7bc
+## Built With
+- React
+- TypeScript
+- Firebase
+- Tailwind CSS
+- Vercel
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Live App
+Coming Soon 🚀
